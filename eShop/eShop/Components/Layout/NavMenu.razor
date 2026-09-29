@@ -1,51 +1,117 @@
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">eShop</a>
-    </div>
-</div>
+@using eShop.Web.Common.Controls
+@using Microsoft.AspNetCore.Components.Authorization
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<header class="beauty-header">
+    <div class="beauty-container">
+        <div class="header-inner">
+            <!-- Left: Brand Logo -->
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-btn me-2 d-lg-none" @onclick="ToggleMobileMenu" aria-label="Toggle navigation">
+                    <i class="bi @(isMobileMenuOpen ? "bi-x-lg" : "bi-list")"></i>
+                </button>
+                <NavLink href="" class="beauty-logo text-decoration-none">
+                    eShop<span class="logo-dot">•</span><span class="logo-tag">Cosmetics</span>
+                </NavLink>
+            </div>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+            <!-- Center: Navigation Links (Desktop) -->
+            <nav class="nav-links-desktop d-none d-lg-flex">
+                <NavLink href="" class="beauty-nav-link" Match="NavLinkMatch.All">
+                    Home
+                </NavLink>
+                <NavLink href="products" class="beauty-nav-link">
+                    Products
+                </NavLink>
+                <NavLink href="about" class="beauty-nav-link">
+                    About
+                </NavLink>
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink href="outstandingorders" class="beauty-nav-link text-uppercase" style="letter-spacing: 0.05em;">
+                            <i class="bi bi-shield-check me-1"></i> Admin Orders
+                        </NavLink>
+                    </Authorized>
+                </AuthorizeView>
+            </nav>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="products">
-                <span class="bi bi-bag-fill" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
+            <!-- Right: Actions (Auth, Cart) -->
+            <div class="header-actions">
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="d-none d-md-flex align-items-center gap-2">
+                            <span class="badge badge-brand">
+                                <i class="bi bi-person-fill me-1"></i> @context.User.Identity?.Name
+                            </span>
+                            <a href="/logout" class="btn-beauty-outline btn-beauty-sm text-decoration-none">
+                                Sign Out
+                            </a>
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink href="login" class="btn-beauty-outline btn-beauty-sm d-none d-md-inline-flex text-decoration-none">
+                            <i class="bi bi-person me-1"></i> Sign In
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="cart">
-                <span class="bi bi-cart-fill" aria-hidden="true"></span> Cart
-            </NavLink>
-        </div>
-
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="outstandingorders">
-                        <span class="bi bi-shield-lock-fill" aria-hidden="true"></span> Admin Orders
-                    </NavLink>
+                <!-- Shopping Bag -->
+                <div class="position-relative">
+                    <CartCountComponent />
                 </div>
-            </Authorized>
-        </AuthorizeView>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
+            </div>
         </div>
+    </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+    <!-- Mobile Drawer Menu -->
+    @if (isMobileMenuOpen)
+    {
+        <div class="mobile-drawer" @onclick="CloseMobileMenu">
+            <NavLink href="" class="beauty-nav-link fs-5" Match="NavLinkMatch.All">
+                <i class="bi bi-house me-2"></i> Home
             </NavLink>
+            <NavLink href="products" class="beauty-nav-link fs-5">
+                <i class="bi bi-grid me-2"></i> Products Catalog
+            </NavLink>
+            <NavLink href="about" class="beauty-nav-link fs-5">
+                <i class="bi bi-info-circle me-2"></i> About Our Atelier
+            </NavLink>
+            
+            <hr class="my-2 border-secondary opacity-25" />
+            
+            <AuthorizeView>
+                <Authorized>
+                    <NavLink href="outstandingorders" class="beauty-nav-link fs-5">
+                        <i class="bi bi-shield-check me-2"></i> Admin Orders
+                    </NavLink>
+                    <div class="mt-3">
+                        <span class="text-secondary small d-block mb-2">Signed in as <strong>@context.User.Identity?.Name</strong></span>
+                        <a href="/logout" class="btn-beauty-secondary w-100 text-decoration-none">
+                            Sign Out
+                        </a>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="mt-3">
+                        <NavLink href="login" class="btn-beauty-primary w-100 text-decoration-none">
+                            <i class="bi bi-person me-2"></i> Sign In to Account
+                        </NavLink>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
-    </nav>
-</div>
+    }
+</header>
+
+@code {
+    private bool isMobileMenuOpen = false;
+
+    private void ToggleMobileMenu()
+    {
+        isMobileMenuOpen = !isMobileMenuOpen;
+    }
+
+    private void CloseMobileMenu()
+    {
+        isMobileMenuOpen = false;
+    }
+}

@@ -2,11 +2,12 @@
 @using eShop.UseCases.PluginInterfaces.StateStore
 @inject IShoppingCartStateStore shoppingCartStateStore
 
-<NavLink href="cart" class="nav-link text-decoration-none d-inline-flex align-items-center position-relative">
-    <i class="bi bi-cart3 fs-5 me-1"></i> Cart
+<NavLink href="cart" class="btn-beauty-outline btn-beauty-sm d-inline-flex align-items-center position-relative text-decoration-none" title="View Shopping Bag">
+    <i class="bi bi-bag me-1 fs-6"></i>
+    <span class="d-none d-sm-inline">Bag</span>
     @if (count > 0)
     {
-        <span class="badge bg-danger rounded-pill ms-2">
+        <span class="beauty-cart-badge">
             @count
         </span>
     }

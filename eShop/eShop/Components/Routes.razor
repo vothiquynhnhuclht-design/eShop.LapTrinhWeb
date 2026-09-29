@@ -8,14 +8,24 @@
     <Found Context="routeData">
         <AuthorizeRouteView DefaultLayout="@typeof(MainLayout)" RouteData="@routeData">
             <NotAuthorized>
-                <div class="container py-4">
-                    <div class="alert alert-danger shadow-sm border-0" role="alert">
-                        <h4 class="alert-heading"><i class="bi bi-shield-x me-2"></i> Access Denied</h4>
-                        <p>You must be authenticated as an administrator to access this area.</p>
-                        <hr />
-                        <p class="mb-0">
-                            Please <NavLink href="login" class="btn btn-danger btn-sm">Log in</NavLink> to continue.
+                <div class="beauty-container py-5">
+                    <div class="beauty-card p-5 text-center max-w-600 mx-auto">
+                        <div class="mb-3">
+                            <div class="d-inline-flex align-items-center justify-content-center"
+                                 style="width: 72px; height: 72px; background-color: var(--color-danger-bg); border-radius: 50%;">
+                                <i class="bi bi-shield-x fs-1" style="color: var(--color-danger);"></i>
+                            </div>
+                        </div>
+                        <span class="badge badge-beauty mb-2">Restricted Access</span>
+                        <h2 class="font-serif fs-3 mb-2">Administrator Access Required</h2>
+                        <p class="text-secondary mb-4">
+                            You must be authenticated with administrator credentials to view this section.
                         </p>
+                        <div>
+                            <NavLink href="login" class="btn-beauty-primary btn-beauty-lg text-decoration-none">
+                                <i class="bi bi-person-lock me-2"></i> Sign In as Administrator
+                            </NavLink>
+                        </div>
                     </div>
                 </div>
             </NotAuthorized>
@@ -23,9 +33,26 @@
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
     </Found>
     <NotFound>
-        <PageTitle>Not found</PageTitle>
+        <PageTitle>Page Not Found - eShop</PageTitle>
         <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
+            <div class="beauty-container py-5">
+                <div class="beauty-card p-5 text-center max-w-600 mx-auto my-5">
+                    <h1 class="font-serif display-4 text-muted mb-3">404</h1>
+                    <h3 class="font-serif fs-3 mb-2">Page Not Found</h3>
+                    <p class="text-secondary mb-4">
+                        We couldn't find the page or formula you were looking for.
+                    </p>
+                    <NavLink href="" class="btn-beauty-primary text-decoration-none">
+                        <i class="bi bi-house me-2"></i> Return to Home
+                    </NavLink>
+                </div>
+            </div>
         </LayoutView>
     </NotFound>
 </Router>
+
+<style>
+    .max-w-600 {
+        max-width: 600px;
+    }
+</style>

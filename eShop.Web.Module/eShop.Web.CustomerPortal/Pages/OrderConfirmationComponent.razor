@@ -5,62 +5,98 @@
 @using eShop.Web.CustomerPortal.Controls
 @inject IViewOrderConfirmationUseCase viewOrderConfirmationUseCase
 
-<div class="container py-4">
+<div class="beauty-container py-5">
     @if (order != null)
     {
-        <div class="card shadow-sm border-0 p-4">
-            <div class="text-center mb-4">
-                <div class="text-success mb-2">
-                    <i class="bi bi-check-circle-fill" style="font-size: 3rem;"></i>
+        <div class="beauty-card p-4 p-md-5 max-w-850 mx-auto">
+            <!-- Header Celebration -->
+            <div class="text-center mb-5">
+                <div class="d-inline-flex align-items-center justify-content-center mb-3"
+                     style="width: 76px; height: 76px; background-color: var(--color-success-bg); border-radius: 50%;">
+                    <i class="bi bi-check2 fs-1" style="color: var(--color-success);"></i>
                 </div>
-                <h2 class="fw-bold text-success">Thank You for Your Order!</h2>
-                <p class="text-muted">Your order has been placed successfully.</p>
+                <span class="badge badge-beauty d-inline-block mb-2">Order Confirmed</span>
+                <h1 class="font-serif fs-2 mb-2">Thank You for Your Order!</h1>
+                <p class="text-secondary max-w-500 mx-auto">
+                    We have received your order and our beauty atelier is carefully preparing your package.
+                </p>
             </div>
 
+            <!-- Order Reference Cards -->
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
-                    <div class="p-3 bg-light rounded">
-                        <h6 class="fw-bold text-secondary mb-2">Order Information</h6>
-                        <div><strong>Order ID:</strong> #@order.OrderId</div>
-                        <div><strong>Order Reference:</strong> <span class="badge bg-dark font-monospace">@order.UniqueId</span></div>
-                        <div><strong>Date Placed:</strong> @order.DatePlaced?.ToString("dd/MM/yyyy HH:mm:ss")</div>
+                    <div class="p-3 bg-light rounded" style="background-color: var(--color-surface-subdued) !important;">
+                        <div class="text-uppercase fw-bold text-muted extra-small mb-2">Order Information</div>
+                        <div class="mb-1"><strong>Order ID:</strong> #@order.OrderId</div>
+                        <div class="mb-1">
+                            <strong>Reference:</strong> 
+                            <span class="badge bg-dark font-monospace">@order.UniqueId</span>
+                        </div>
+                        <div class="small text-secondary">
+                            <strong>Date:</strong> @order.DatePlaced?.ToString("dd/MM/yyyy HH:mm:ss")
+                        </div>
                     </div>
                 </div>
+
                 <div class="col-md-6">
-                    <div class="p-3 bg-light rounded">
-                        <h6 class="fw-bold text-secondary mb-2">Shipping Information</h6>
-                        <div><strong>Recipient:</strong> @order.CustomerName</div>
-                        <div><strong>Address:</strong> @order.CustomerAddress, @order.CustomerCity</div>
-                        <div><strong>State / Country:</strong> @order.CustomerStateProvince, @order.CustomerCountry</div>
+                    <div class="p-3 bg-light rounded" style="background-color: var(--color-surface-subdued) !important;">
+                        <div class="text-uppercase fw-bold text-muted extra-small mb-2">Shipping Destination</div>
+                        <div class="fw-semibold text-dark">@order.CustomerName</div>
+                        <div class="small text-secondary">@order.CustomerAddress, @order.CustomerCity</div>
+                        <div class="small text-secondary">@order.CustomerStateProvince, @order.CustomerCountry</div>
                     </div>
                 </div>
             </div>
 
-            <h5 class="fw-bold mb-3">Order Details</h5>
-            <OrderLineItemsComponent LineItems="order.LineItems" />
-
-            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                <span class="fs-5 fw-bold">Total Paid:</span>
-                <span class="fs-4 fw-bold text-danger">@order.TotalPrice.ToString("c")</span>
+            <!-- Ordered Items -->
+            <h5 class="font-serif fs-5 mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                Purchased Items
+            </h5>
+            <div class="mb-4">
+                <OrderLineItemsComponent LineItems="order.LineItems" />
             </div>
 
-            <div class="text-center mt-4">
-                <NavLink href="products" class="btn btn-primary px-4 py-2">
-                    <i class="bi bi-arrow-left me-2"></i> Continue Shopping
+            <!-- Total Paid -->
+            <div class="d-flex justify-content-between align-items-baseline p-3 rounded mb-4" style="background-color: var(--color-surface-subdued);">
+                <span class="fw-bold">Total Amount Paid</span>
+                <span class="fw-bold fs-3 text-dark font-serif">@order.TotalPrice.ToString("c")</span>
+            </div>
+
+            <!-- Back to Shopping -->
+            <div class="text-center pt-2">
+                <NavLink href="products" class="btn-beauty-primary btn-beauty-lg text-decoration-none">
+                    <i class="bi bi-arrow-left me-2"></i> Explore More Beauty Formulas
                 </NavLink>
             </div>
         </div>
     }
     else
     {
-        <div class="alert alert-danger" role="alert">
-            Order could not be found for reference: <strong>@uniqueId</strong>
+        <div class="beauty-card p-5 text-center my-4 max-w-600 mx-auto">
+            <h4 class="font-serif text-danger mb-2">Order Not Found</h4>
+            <p class="text-secondary mb-4">No order was found matching the reference: <code>@uniqueId</code></p>
+            <NavLink href="products" class="btn-beauty-primary text-decoration-none">
+                Return to Shop
+            </NavLink>
         </div>
-        <NavLink href="products" class="btn btn-secondary">
-            Back to Products
-        </NavLink>
     }
 </div>
+
+<style>
+    .max-w-850 {
+        max-width: 850px;
+    }
+    .max-w-500 {
+        max-width: 500px;
+    }
+    .max-w-600 {
+        max-width: 600px;
+    }
+    .extra-small {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+    }
+</style>
 
 @code {
     [Parameter]

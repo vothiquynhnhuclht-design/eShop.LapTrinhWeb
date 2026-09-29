@@ -4,38 +4,94 @@
 @inject IAddProductToCartUseCase addProductToCartUseCase
 @inject NavigationManager navigationManager
 
-<div class="container py-3">
-    <div class="mb-3">
-        <NavLink href="products" class="btn btn-outline-secondary btn-sm">
-            &larr; Back to Products
+<div class="beauty-container py-4">
+    <!-- Breadcrumb / Back Link -->
+    <nav class="mb-4">
+        <NavLink href="products" class="btn-beauty-outline btn-beauty-sm text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i> Back to Collection
         </NavLink>
-    </div>
+    </nav>
 
     @if (product != null)
     {
-        <div class="card shadow-sm border-0">
-            <div class="row g-0 align-items-center">
-                <div class="col-md-5 text-center p-4 bg-light rounded-start">
-                    <img src="@product.ImageLink" class="img-fluid rounded" alt="@product.Name" style="max-height: 350px; object-fit: contain;" />
+        <div class="beauty-card p-4 p-lg-5">
+            <div class="row g-5 align-items-center">
+                <!-- Left: Large Showcase Image -->
+                <div class="col-lg-6">
+                    <div class="product-detail-img-container">
+                        <span class="product-hero-badge">
+                            <i class="bi bi-patch-check-fill me-1 text-accent"></i> Authentic Formula
+                        </span>
+                        <img src="@product.ImageLink" class="product-detail-img" alt="@product.Name" />
+                    </div>
                 </div>
-                <div class="col-md-7">
-                    <div class="card-body p-4">
-                        <span class="badge bg-secondary mb-2 text-uppercase">@product.Brand</span>
-                        <h2 class="card-title mb-3">@product.Name</h2>
-                        
-                        <div class="mb-3">
-                            <span class="text-danger fw-bold fs-3">@product.Price.ToString("c")</span>
+
+                <!-- Right: Product Information & Action -->
+                <div class="col-lg-6">
+                    <div class="ps-lg-3">
+                        <!-- Brand & Title -->
+                        <div class="text-uppercase fw-bold text-muted small letter-spacing-2 mb-2">
+                            @product.Brand
                         </div>
-                        
-                        <hr />
-                        
-                        <h6 class="text-muted fw-bold">Description:</h6>
-                        <p class="card-text text-secondary lh-base">@product.Description</p>
-                        
-                        <div class="mt-4 pt-2">
-                            <button class="btn btn-primary btn-lg px-4" @onclick="AddToCart">
-                                <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                        <h1 class="product-detail-title mb-3">@product.Name</h1>
+
+                        <!-- Ratings & Reviews -->
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <div class="text-warning small">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <span class="text-secondary small fw-semibold">4.9 / 5.0</span>
+                            <span class="text-muted small">• (124 reviews)</span>
+                        </div>
+
+                        <!-- Price Tag -->
+                        <div class="product-detail-price mb-4">
+                            @product.Price.ToString("c")
+                        </div>
+
+                        <hr class="border-secondary opacity-15 my-4" />
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <h6 class="text-uppercase fw-bold small text-muted mb-2">Description & Benefits</h6>
+                            <p class="product-description-text mb-0">@product.Description</p>
+                        </div>
+
+                        <!-- Quantity Selector & Add to Cart -->
+                        <div class="d-flex flex-column flex-sm-row align-items-stretch gap-3 mb-4 pt-2">
+                            <div class="quantity-counter">
+                                <button type="button" class="qty-btn" @onclick="DecrementQuantity" disabled="@(quantity <= 1)">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <span class="qty-value">@quantity</span>
+                                <button type="button" class="qty-btn" @onclick="IncrementQuantity">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+
+                            <button type="button" class="btn-beauty-primary btn-beauty-lg flex-grow-1" @onclick="AddToCart">
+                                <i class="bi bi-bag-plus me-2"></i> Add to Bag
                             </button>
+                        </div>
+
+                        <!-- Assurance Badges -->
+                        <div class="d-flex flex-wrap gap-4 pt-3 border-top border-secondary border-opacity-10 text-secondary small">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-truck fs-5 text-accent"></i>
+                                <span>Free shipping over $35</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-arrow-repeat fs-5 text-accent"></i>
+                                <span>30-Day Easy Returns</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-shield-check fs-5 text-accent"></i>
+                                <span>Dermatologist Approved</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -44,14 +100,126 @@
     }
     else
     {
-        <div class="alert alert-danger" role="alert">
-            Product not found.
+        <div class="beauty-card p-5 text-center my-4">
+            <h4 class="text-danger mb-2">Product Not Found</h4>
+            <p class="text-secondary mb-4">The formula you are looking for might have been moved or is currently unavailable.</p>
+            <NavLink href="products" class="btn-beauty-primary">
+                Explore Collection
+            </NavLink>
         </div>
     }
 </div>
 
+<style>
+    .product-detail-img-container {
+        background-color: var(--color-surface-subdued);
+        border-radius: var(--radius-xl);
+        padding: 3rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        min-height: 400px;
+    }
+
+    .product-hero-badge {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        padding: 0.35rem 0.85rem;
+        border-radius: var(--radius-pill);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        box-shadow: var(--shadow-subtle);
+    }
+
+    .product-detail-img {
+        max-height: 380px;
+        max-width: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 12px 24px rgba(33, 30, 30, 0.08));
+    }
+
+    .product-detail-title {
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 600;
+        color: var(--color-primary);
+        line-height: 1.25;
+    }
+
+    .product-detail-price {
+        font-family: var(--font-body);
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        letter-spacing: -0.03em;
+    }
+
+    .product-description-text {
+        font-size: 0.95rem;
+        color: var(--color-secondary);
+        line-height: 1.7;
+    }
+
+    .quantity-counter {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-pill);
+        background: #FFFFFF;
+        padding: 0.25rem;
+        height: 52px;
+        width: 130px;
+    }
+
+    .qty-btn {
+        background: none;
+        border: none;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
+        font-size: 1.1rem;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .qty-btn:hover:not(:disabled) {
+        background-color: var(--color-surface-subdued);
+        color: var(--color-accent);
+    }
+
+    .qty-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .qty-value {
+        flex: 1;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--color-primary);
+    }
+
+    .letter-spacing-2 {
+        letter-spacing: 0.15em;
+    }
+
+    .text-accent {
+        color: var(--color-accent);
+    }
+</style>
+
 @code {
     private Product? product;
+    private int quantity = 1;
 
     [Parameter]
     public int id { get; set; }
@@ -62,11 +230,27 @@
         product = viewProductUseCase.Execute(id);
     }
 
+    private void IncrementQuantity()
+    {
+        quantity++;
+    }
+
+    private void DecrementQuantity()
+    {
+        if (quantity > 1)
+        {
+            quantity--;
+        }
+    }
+
     private void AddToCart()
     {
         if (product != null)
         {
-            addProductToCartUseCase.Execute(product.Id);
+            for (int i = 0; i < quantity; i++)
+            {
+                addProductToCartUseCase.Execute(product.Id);
+            }
             navigationManager.NavigateTo("/cart");
         }
     }

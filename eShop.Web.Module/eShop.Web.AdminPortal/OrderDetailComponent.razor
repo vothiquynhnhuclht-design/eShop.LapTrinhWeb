@@ -1,66 +1,92 @@
 @page "/orderdetail/{orderId:int}"
 @attribute [Authorize]
+@using eShop.CoreBusiness.Models
+@using eShop.UseCases.AdminPortal.OrderDetailScreen
+@using eShop.Web.CustomerPortal.Controls
+@using Microsoft.AspNetCore.Components.Authorization
 @inject IViewOrderDetailUseCase viewOrderDetailUseCase
 @inject IProcessOrderUseCase processOrderUseCase
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authenticationStateProvider
 
-<div class="container py-4">
-    <div class="mb-3">
-        <NavLink href="outstandingorders" class="btn btn-outline-secondary btn-sm">
-            &larr; Back to Outstanding Orders
+<div class="beauty-container py-4">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <NavLink href="outstandingorders" class="btn-beauty-outline btn-beauty-sm text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i> Back to Outstanding Orders
         </NavLink>
     </div>
 
     @if (order != null)
     {
-        <div class="card shadow-sm border-0 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-                <h3 class="mb-0">Order Details - #@order.OrderId</h3>
-                @if (order.DateProcessed.HasValue)
-                {
-                    <span class="badge bg-success fs-6">
-                        Processed on @order.DateProcessed.Value.ToString("dd/MM/yyyy HH:mm") by @order.AdminUser
-                    </span>
-                }
-                else
-                {
-                    <span class="badge bg-warning text-dark fs-6">Pending Processing</span>
-                }
+        <div class="beauty-card p-4 p-md-5">
+            <!-- Order Header & Status -->
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-10">
+                <div>
+                    <span class="badge badge-brand mb-2">Order #@order.OrderId</span>
+                    <h2 class="font-serif fs-3 mb-0">Order Details Management</h2>
+                </div>
+                <div>
+                    @if (order.DateProcessed.HasValue)
+                    {
+                        <span class="badge" style="background-color: var(--color-success-bg); color: var(--color-success); font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <i class="bi bi-check-circle-fill me-1"></i> Processed on @order.DateProcessed.Value.ToString("dd/MM/yyyy HH:mm") by @order.AdminUser
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-beauty" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <i class="bi bi-clock-history me-1"></i> Awaiting Processing
+                        </span>
+                    }
+                </div>
             </div>
 
+            <!-- 2 Info Cards -->
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
-                    <div class="p-3 bg-light rounded">
-                        <h6 class="fw-bold text-secondary mb-2">Order Information</h6>
+                    <div class="p-3 rounded" style="background-color: var(--color-surface-subdued);">
+                        <div class="text-uppercase fw-bold text-muted extra-small mb-2">Order Summary</div>
                         <div><strong>Order ID:</strong> #@order.OrderId</div>
-                        <div><strong>Reference ID:</strong> <span class="badge bg-dark font-monospace">@order.UniqueId</span></div>
-                        <div><strong>Date Placed:</strong> @order.DatePlaced?.ToString("dd/MM/yyyy HH:mm:ss")</div>
+                        <div class="my-1">
+                            <strong>Reference:</strong> <span class="badge bg-dark font-monospace">@order.UniqueId</span>
+                        </div>
+                        <div class="small text-secondary">
+                            <strong>Date Placed:</strong> @order.DatePlaced?.ToString("dd/MM/yyyy HH:mm:ss")
+                        </div>
                     </div>
                 </div>
+
                 <div class="col-md-6">
-                    <div class="p-3 bg-light rounded">
-                        <h6 class="fw-bold text-secondary mb-2">Customer / Shipping Information</h6>
-                        <div><strong>Name:</strong> @order.CustomerName</div>
-                        <div><strong>Address:</strong> @order.CustomerAddress, @order.CustomerCity</div>
-                        <div><strong>State / Country:</strong> @order.CustomerStateProvince, @order.CustomerCountry</div>
+                    <div class="p-3 rounded" style="background-color: var(--color-surface-subdued);">
+                        <div class="text-uppercase fw-bold text-muted extra-small mb-2">Shipping Information</div>
+                        <div class="fw-semibold">@order.CustomerName</div>
+                        <div class="small text-secondary">@order.CustomerAddress, @order.CustomerCity</div>
+                        <div class="small text-secondary">@order.CustomerStateProvince, @order.CustomerCountry</div>
                     </div>
                 </div>
             </div>
 
-            <h5 class="fw-bold mb-3">Purchased Items</h5>
-            <OrderLineItemsComponent LineItems="order.LineItems" />
-
-            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                <span class="fs-5 fw-bold">Total Amount:</span>
-                <span class="fs-4 fw-bold text-danger">@order.TotalPrice.ToString("c")</span>
+            <!-- Items -->
+            <h5 class="font-serif fs-5 mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                Purchased Items List
+            </h5>
+            <div class="mb-4">
+                <OrderLineItemsComponent LineItems="order.LineItems" />
             </div>
 
+            <!-- Total Amount -->
+            <div class="d-flex justify-content-between align-items-baseline p-3 rounded mb-4" style="background-color: var(--color-surface-subdued);">
+                <span class="fw-bold fs-6">Total Amount:</span>
+                <span class="fw-bold fs-3 text-dark font-serif">@order.TotalPrice.ToString("c")</span>
+            </div>
+
+            <!-- Process Action Button -->
             @if (!order.DateProcessed.HasValue)
             {
-                <div class="mt-4 pt-2 text-end">
-                    <button class="btn btn-success btn-lg px-4" @onclick="HandleProcessOrder">
-                        <i class="bi bi-check2-circle me-2"></i> Mark as Processed
+                <div class="text-end pt-2">
+                    <button class="btn-beauty-primary btn-beauty-lg" @onclick="HandleProcessOrder">
+                        <i class="bi bi-check2-circle me-2"></i> Confirm & Mark as Processed
                     </button>
                 </div>
             }
@@ -68,11 +94,22 @@
     }
     else
     {
-        <div class="alert alert-danger" role="alert">
-            Order #@orderId could not be found.
+        <div class="beauty-card p-5 text-center my-4">
+            <h4 class="font-serif text-danger mb-2">Order Not Found</h4>
+            <p class="text-secondary mb-4">Order #@orderId could not be located in the database.</p>
+            <NavLink href="outstandingorders" class="btn-beauty-primary">
+                Return to Orders
+            </NavLink>
         </div>
     }
 </div>
+
+<style>
+    .extra-small {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+    }
+</style>
 
 @code {
     [Parameter]

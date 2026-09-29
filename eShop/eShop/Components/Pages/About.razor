@@ -1,0 +1,85 @@
+@page "/about"
+
+<div class="beauty-about-page py-5">
+    <div class="beauty-container">
+        <!-- Hero Section -->
+        <div class="text-center max-w-750 mx-auto mb-5 pb-3">
+            <span class="badge badge-beauty mb-3">Our Atelier Philosophy</span>
+            <h1 class="font-serif display-5 fw-bold mb-3">Beauty, Thoughtfully Curated</h1>
+            <p class="fs-5 text-secondary lh-lg">
+                Founded on the belief that beauty should enhance your natural radiance without complexity. 
+                Every formula in our collection is carefully selected for performance, comfort, and timeless elegance.
+            </p>
+        </div>
+
+        <!-- 3 Pillars Grid -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="beauty-card p-4 h-100 text-center">
+                    <div class="pillar-icon-box mb-3">
+                        <i class="bi bi-sparkles"></i>
+                    </div>
+                    <h4 class="font-serif fs-5 mb-2">High-Performance Formulas</h4>
+                    <p class="text-secondary small mb-0">
+                        Weightless textures, breathable coverage, and all-day wear engineered for modern, dynamic living.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="beauty-card p-4 h-100 text-center">
+                    <div class="pillar-icon-box mb-3">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                    <h4 class="font-serif fs-5 mb-2">Clean & Cruelty Free</h4>
+                    <p class="text-secondary small mb-0">
+                        We partner exclusively with certified brands committed to ethical sourcing, dermatologist testing, and no animal testing.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="beauty-card p-4 h-100 text-center">
+                    <div class="pillar-icon-box mb-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4 class="font-serif fs-5 mb-2">Seamless Experience</h4>
+                    <p class="text-secondary small mb-0">
+                        From instant real-time cart state to frictionless encrypted checkout and dedicated support.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner CTA -->
+        <div class="beauty-card p-5 text-center mt-4" style="background: linear-gradient(135deg, #FBF6F4 0%, #F5EAE7 100%);">
+            <h2 class="font-serif fs-2 mb-3">Ready to Elevate Your Daily Ritual?</h2>
+            <p class="text-secondary max-w-500 mx-auto mb-4">
+                Discover the shades and textures that accentuate your unique beauty.
+            </p>
+            <NavLink href="products" class="btn-beauty-primary btn-beauty-lg text-decoration-none">
+                <i class="bi bi-grid me-2"></i> Browse All Products
+            </NavLink>
+        </div>
+    </div>
+</div>
+
+<style>
+    .max-w-750 {
+        max-width: 750px;
+    }
+    .max-w-500 {
+        max-width: 500px;
+    }
+    .pillar-icon-box {
+        width: 60px;
+        height: 60px;
+        background-color: var(--color-accent-light);
+        color: var(--color-accent);
+        font-size: 1.5rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>

@@ -3,36 +3,142 @@
 @page "/search"
 @using eShop.CoreBusiness.Models
 @using eShop.UseCases.SearchProductScreen
+@using eShop.Web.Common.Controls
+@using eShop.Web.CustomerPortal.Controls
 @inject ISearchProductUseCase searchProductUseCase
 
-<div class="container-fluid py-2">
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-        <h3 class="mb-0">Product Catalog</h3>
-    </div>
+<div class="beauty-catalog-page">
+    <!-- Hero Header Discovery Section -->
+    <section class="catalog-hero text-center py-5">
+        <div class="beauty-container">
+            <span class="badge badge-beauty mb-3">The Beauty Edit</span>
+            <h1 class="hero-heading mb-3">Discover Your Signature Glow</h1>
+            <p class="hero-subtitle mb-4">
+                Explore our curated collection of high-performance beauty, radiant foundations, and illuminating bronzers.
+            </p>
 
-    <div class="mb-4">
-        <SearchBarComponent OnSearch="HandleSearch"></SearchBarComponent>
-    </div>
+            <!-- Search Bar Component -->
+            <div class="mb-4">
+                <SearchBarComponent OnSearch="HandleSearch" />
+            </div>
 
-    @if (products != null && products.Any())
-    {
-        <div class="d-flex flex-wrap gap-3">
-            @foreach (var prod in products)
+            <!-- Quick Filter Category Pills -->
+            <div class="d-flex flex-wrap justify-content-center gap-2 pt-2">
+                <button type="button" class="category-pill @(activeFilter == "" ? "active" : "")" @onclick="@(() => HandleCategoryFilter(""))">
+                    All Products
+                </button>
+                <button type="button" class="category-pill @(activeFilter == "Foundation" ? "active" : "")" @onclick="@(() => HandleCategoryFilter("Foundation"))">
+                    Foundation
+                </button>
+                <button type="button" class="category-pill @(activeFilter == "Blush" ? "active" : "")" @onclick="@(() => HandleCategoryFilter("Blush"))">
+                    Blush
+                </button>
+                <button type="button" class="category-pill @(activeFilter == "Bronzer" ? "active" : "")" @onclick="@(() => HandleCategoryFilter("Bronzer"))">
+                    Bronzer
+                </button>
+                <button type="button" class="category-pill @(activeFilter == "Palette" ? "active" : "")" @onclick="@(() => HandleCategoryFilter("Palette"))">
+                    Palettes
+                </button>
+                <button type="button" class="category-pill @(activeFilter == "Eye" ? "active" : "")" @onclick="@(() => HandleCategoryFilter("Eye"))">
+                    Eyes
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Grid Section -->
+    <section class="catalog-content pb-5">
+        <div class="beauty-container">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-10">
+                <div class="text-secondary small fw-semibold">
+                    Showing <strong class="text-dark">@(products?.Count() ?? 0)</strong> curated formulas
+                </div>
+                @if (!string.IsNullOrEmpty(activeFilter))
+                {
+                    <button class="btn btn-link btn-sm text-secondary text-decoration-none p-0" @onclick="@(() => HandleCategoryFilter(""))">
+                        <i class="bi bi-x-circle me-1"></i> Clear Filter (@activeFilter)
+                    </button>
+                }
+            </div>
+
+            @if (products != null && products.Any())
             {
-                <ProductItemComponent Product="prod"></ProductItemComponent>
+                <div class="beauty-product-grid">
+                    @foreach (var prod in products)
+                    {
+                        <ProductItemComponent Product="prod" />
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="beauty-card p-5 text-center my-4">
+                    <div class="mb-3 text-muted">
+                        <i class="bi bi-search" style="font-size: 2.5rem; color: var(--color-accent);"></i>
+                    </div>
+                    <h4 class="mb-2">No matching formulas found</h4>
+                    <p class="text-secondary mb-4">We couldn't find any products matching your search term. Try a different keyword or reset filters.</p>
+                    <button class="btn-beauty-primary" @onclick="@(() => HandleCategoryFilter(""))">
+                        View All Products
+                    </button>
+                </div>
             }
         </div>
-    }
-    else
-    {
-        <div class="alert alert-warning" role="alert">
-            No products found matching your search.
-        </div>
-    }
+    </section>
 </div>
+
+<style>
+    .catalog-hero {
+        background: linear-gradient(180deg, rgba(247, 244, 242, 0.6) 0%, rgba(250, 248, 246, 0) 100%);
+        border-bottom: 1px solid var(--color-border-subtle);
+        margin-bottom: 2.5rem;
+    }
+
+    .hero-heading {
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        font-weight: 600;
+        color: var(--color-primary);
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(0.95rem, 1.5vw, 1.125rem);
+        color: var(--color-secondary);
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .category-pill {
+        background: #FFFFFF;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-pill);
+        padding: 0.45rem 1.15rem;
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--color-secondary);
+        transition: all var(--transition-fast);
+        cursor: pointer;
+    }
+
+    .category-pill:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        transform: translateY(-1px);
+    }
+
+    .category-pill.active {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        color: #FFFFFF;
+        font-weight: 600;
+    }
+</style>
 
 @code {
     private IEnumerable<Product>? products;
+    private string activeFilter = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -42,6 +148,13 @@
 
     private void HandleSearch(string filter)
     {
+        activeFilter = filter ?? string.Empty;
         products = searchProductUseCase.Execute(filter);
+    }
+
+    private void HandleCategoryFilter(string category)
+    {
+        activeFilter = category;
+        products = searchProductUseCase.Execute(category);
     }
 }

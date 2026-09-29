@@ -8,71 +8,90 @@
 @inject IPlaceOrderUseCase placeOrderUseCase
 @inject NavigationManager navigationManager
 
-<div class="container py-3">
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-        <h3 class="mb-0">Checkout & Place Order</h3>
-        <NavLink href="cart" class="btn btn-outline-secondary btn-sm">
-            &larr; Back to Cart
+<div class="beauty-container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-10">
+        <div>
+            <span class="badge badge-beauty mb-2">Secure Checkout</span>
+            <h1 class="font-serif fs-2 mb-0">Complete Your Order</h1>
+        </div>
+        <NavLink href="cart" class="btn-beauty-outline btn-beauty-sm text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i> Return to Bag
         </NavLink>
     </div>
 
     @if (order != null && order.LineItems != null && order.LineItems.Count > 0)
     {
         <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="card shadow-sm border-0 p-4">
-                    <h5 class="card-title fw-bold mb-3 border-bottom pb-2">Customer Information</h5>
+            <!-- Left: Checkout Shipping Form -->
+            <div class="col-lg-7">
+                <div class="beauty-card p-4 p-md-5">
+                    <h4 class="font-serif fs-5 mb-4 pb-2 border-bottom border-secondary border-opacity-10">
+                        <i class="bi bi-geo-alt me-2 text-accent"></i> Shipping & Contact Details
+                    </h4>
+
                     <EditForm Model="order" OnValidSubmit="HandlePlaceOrder">
                         <DataAnnotationsValidator />
-                        <ValidationSummary class="alert alert-danger" />
 
                         <div class="mb-3">
-                            <label for="name" class="form-label fw-semibold">Customer Name</label>
-                            <InputText id="name" class="form-control" @bind-Value="order.CustomerName" placeholder="Enter your full name" />
-                            <ValidationMessage For="@(() => order.CustomerName)" class="text-danger small" />
+                            <label for="name" class="form-label">Full Name</label>
+                            <InputText id="name" class="beauty-input w-100" @bind-Value="order.CustomerName" placeholder="e.g. Jane Doe" />
+                            <ValidationMessage For="@(() => order.CustomerName)" class="text-danger small mt-1" />
                         </div>
 
                         <div class="mb-3">
-                            <label for="address" class="form-label fw-semibold">Address</label>
-                            <InputText id="address" class="form-control" @bind-Value="order.CustomerAddress" placeholder="123 Street Name" />
-                            <ValidationMessage For="@(() => order.CustomerAddress)" class="text-danger small" />
+                            <label for="address" class="form-label">Street Address</label>
+                            <InputText id="address" class="beauty-input w-100" @bind-Value="order.CustomerAddress" placeholder="e.g. 123 Rue de la Beauté, Apt 4" />
+                            <ValidationMessage For="@(() => order.CustomerAddress)" class="text-danger small mt-1" />
                         </div>
 
-                        <div class="row g-2 mb-3">
+                        <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label for="city" class="form-label fw-semibold">City</label>
-                                <InputText id="city" class="form-control" @bind-Value="order.CustomerCity" placeholder="City" />
-                                <ValidationMessage For="@(() => order.CustomerCity)" class="text-danger small" />
+                                <label for="city" class="form-label">City</label>
+                                <InputText id="city" class="beauty-input w-100" @bind-Value="order.CustomerCity" placeholder="e.g. Paris" />
+                                <ValidationMessage For="@(() => order.CustomerCity)" class="text-danger small mt-1" />
                             </div>
                             <div class="col-md-6">
-                                <label for="province" class="form-label fw-semibold">State / Province</label>
-                                <InputText id="province" class="form-control" @bind-Value="order.CustomerStateProvince" placeholder="State/Province" />
-                                <ValidationMessage For="@(() => order.CustomerStateProvince)" class="text-danger small" />
+                                <label for="province" class="form-label">State / Province</label>
+                                <InputText id="province" class="beauty-input w-100" @bind-Value="order.CustomerStateProvince" placeholder="e.g. Île-de-France" />
+                                <ValidationMessage For="@(() => order.CustomerStateProvince)" class="text-danger small mt-1" />
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="country" class="form-label fw-semibold">Country</label>
-                            <InputText id="country" class="form-control" @bind-Value="order.CustomerCountry" placeholder="Country" />
-                            <ValidationMessage For="@(() => order.CustomerCountry)" class="text-danger small" />
+                            <label for="country" class="form-label">Country</label>
+                            <InputText id="country" class="beauty-input w-100" @bind-Value="order.CustomerCountry" placeholder="e.g. France / Vietnam" />
+                            <ValidationMessage For="@(() => order.CustomerCountry)" class="text-danger small mt-1" />
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg fw-bold py-2">
-                                <i class="bi bi-check-circle me-2"></i> Place Order Now
+                        <div class="d-grid pt-2">
+                            <button type="submit" class="btn-beauty-primary btn-beauty-lg">
+                                <i class="bi bi-shield-check me-2"></i> Authorize & Place Order • @order.TotalPrice.ToString("c")
                             </button>
                         </div>
                     </EditForm>
                 </div>
             </div>
 
-            <div class="col-lg-6">
-                <div class="card shadow-sm border-0 p-4 mb-4">
-                    <h5 class="card-title fw-bold mb-3 border-bottom pb-2">Order Items</h5>
-                    <OrderLineItemsComponent LineItems="order.LineItems" />
-                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                        <span class="fs-5 fw-bold">Total Amount:</span>
-                        <span class="fs-4 fw-bold text-danger">@order.TotalPrice.ToString("c")</span>
+            <!-- Right: Order Items Summary -->
+            <div class="col-lg-5">
+                <div class="beauty-card p-4 sticky-top" style="top: 96px;">
+                    <h4 class="font-serif fs-5 mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                        Order Review (@order.TotalItems items)
+                    </h4>
+
+                    <div class="mb-4 max-h-350 overflow-auto pe-1">
+                        <OrderLineItemsComponent LineItems="order.LineItems" />
+                    </div>
+
+                    <div class="d-flex justify-content-between text-secondary mb-2 small">
+                        <span>Delivery</span>
+                        <span class="badge" style="background-color: var(--color-success-bg); color: var(--color-success); font-weight: 700;">FREE</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-baseline pt-3 border-top border-secondary border-opacity-15">
+                        <span class="fw-bold fs-6">Total Amount</span>
+                        <span class="fw-bold fs-3 text-dark font-serif">@order.TotalPrice.ToString("c")</span>
                     </div>
                 </div>
             </div>
@@ -80,17 +99,24 @@
     }
     else
     {
-        <div class="card shadow-sm border-0 p-5 text-center my-4">
-            <h4 class="text-secondary mb-3">Cannot proceed to checkout</h4>
-            <p class="text-muted mb-4">Your shopping cart is empty.</p>
-            <div>
-                <NavLink href="products" class="btn btn-primary px-4 py-2">
-                    Start Shopping
-                </NavLink>
-            </div>
+        <div class="beauty-card p-5 text-center my-5">
+            <h4 class="font-serif mb-3">Your shopping bag is empty</h4>
+            <p class="text-secondary mb-4">Please add items to your cart before proceeding to checkout.</p>
+            <NavLink href="products" class="btn-beauty-primary">
+                Explore Beauty Products
+            </NavLink>
         </div>
     }
 </div>
+
+<style>
+    .max-h-350 {
+        max-height: 350px;
+    }
+    .text-accent {
+        color: var(--color-accent);
+    }
+</style>
 
 @code {
     private Order? order;

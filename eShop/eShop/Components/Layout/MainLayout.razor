@@ -1,38 +1,82 @@
 @inherits LayoutComponentBase
-@using eShop.Web.Common.Controls
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="page-wrapper">
+    <!-- Top Navigation Header -->
+    <NavMenu />
 
-    <main>
-        <div class="top-row px-4 d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank" class="me-3">About</a>
-                <AuthorizeView>
-                    <Authorized>
-                        <span class="text-secondary small me-2">Hello, <strong>@context.User.Identity?.Name</strong></span>
-                        <a href="/logout" class="btn btn-outline-danger btn-sm py-0 px-2">Logout</a>
-                    </Authorized>
-                    <NotAuthorized>
-                        <NavLink href="login" class="btn btn-outline-primary btn-sm py-0 px-2">Login</NavLink>
-                    </NotAuthorized>
-                </AuthorizeView>
+    <!-- Main Content Body -->
+    <main class="main-content">
+        @Body
+    </main>
+
+    <!-- Luxury Beauty Footer -->
+    <footer class="beauty-footer">
+        <div class="beauty-container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="beauty-logo mb-3">
+                        eShop<span class="logo-dot">•</span><span class="logo-tag">Cosmetics</span>
+                    </div>
+                    <p class="text-secondary small pe-lg-4 mb-4">
+                        Thoughtfully crafted cosmetics and skincare designed to elevate your everyday ritual. 
+                        Pure formulas, dermatologically tested, and cruelty-free.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <span class="badge badge-beauty"><i class="bi bi-heart me-1"></i> Cruelty Free</span>
+                        <span class="badge badge-beauty"><i class="bi bi-shield-check me-1"></i> 100% Authentic</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6>Collections</h6>
+                    <ul>
+                        <li><NavLink href="products">Face & Base</NavLink></li>
+                        <li><NavLink href="products">Eyes & Brows</NavLink></li>
+                        <li><NavLink href="products">Blush & Glow</NavLink></li>
+                        <li><NavLink href="products">Best Sellers</NavLink></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6>Experience</h6>
+                    <ul>
+                        <li><NavLink href="about">Our Philosophy</NavLink></li>
+                        <li><NavLink href="cart">Shopping Bag</NavLink></li>
+                        <li><NavLink href="login">Account Portal</NavLink></li>
+                        <li><NavLink href="products">All Products</NavLink></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <h6>Atelier Newsletter</h6>
+                    <p class="text-secondary small mb-3">
+                        Subscribe to receive exclusive previews, beauty masterclasses, and curated offers.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <input type="email" class="beauty-input w-100" placeholder="Enter your email..." />
+                        <button type="button" class="btn-beauty-primary px-3">Join</button>
+                    </div>
+                </div>
             </div>
-            <div>
-                <CartCountComponent />
+
+            <hr class="border-secondary opacity-25 my-4" />
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 text-secondary small">
+                <div>
+                    &copy; @DateTime.Now.Year <strong>eShop Cosmetics</strong>. All rights reserved. Clean Architecture Blazor Enterprise.
+                </div>
+                <div class="d-flex gap-4">
+                    <span class="text-muted"><i class="bi bi-truck me-1"></i> Fast Shipping</span>
+                    <span class="text-muted"><i class="bi bi-arrow-counterclockwise me-1"></i> Easy Returns</span>
+                    <span class="text-muted"><i class="bi bi-lock me-1"></i> Secure Checkout</span>
+                </div>
             </div>
         </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    </footer>
 </div>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
+    <a href="" class="reload text-dark fw-bold text-decoration-underline ms-2">Reload</a>
     <a class="dismiss">🗙</a>
 </div>

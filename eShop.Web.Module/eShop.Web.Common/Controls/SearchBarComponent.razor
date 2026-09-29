@@ -1,11 +1,43 @@
-<div class="row g-2 align-items-center" style="max-width: 500px;">
-    <div class="col">
-        <input type="text" class="form-control" id="filter" placeholder="Search product name..." @bind-value="filter" @onkeyup="HandleKeyUp" />
+<div class="search-bar-wrapper">
+    <div class="position-relative w-100">
+        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+        <input type="text" 
+               class="beauty-input w-100 ps-5 pe-5 py-2" 
+               id="filter" 
+               placeholder="Search formulas, blush, foundation, eyes..." 
+               @bind-value="filter" 
+               @bind-value:event="oninput"
+               @onkeyup="HandleKeyUp" />
+        @if (!string.IsNullOrEmpty(filter))
+        {
+            <button type="button" class="btn btn-link position-absolute top-50 end-0 translate-middle-y me-2 p-1 text-muted text-decoration-none" @onclick="HandleClear" title="Clear search">
+                <i class="bi bi-x-circle-fill"></i>
+            </button>
+        }
     </div>
-    <div class="col-auto">
-        <button type="button" class="btn btn-primary px-4" @onclick="HandleSearch">Search</button>
-    </div>
+    <button type="button" class="btn-beauty-primary ms-2 px-4 text-nowrap" @onclick="HandleSearch">
+        <i class="bi bi-search me-1 d-none d-sm-inline"></i> Search
+    </button>
 </div>
+
+<style>
+    .search-bar-wrapper {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 620px;
+        margin: 0 auto;
+    }
+    .search-bar-wrapper input {
+        height: 50px;
+        border-radius: var(--radius-pill);
+        box-shadow: var(--shadow-sm);
+        font-size: 0.95rem;
+    }
+    .search-bar-wrapper button.btn-beauty-primary {
+        height: 50px;
+    }
+</style>
 
 @code {
     private string filter = string.Empty;
@@ -24,5 +56,11 @@
         {
             HandleSearch();
         }
+    }
+
+    private void HandleClear()
+    {
+        filter = string.Empty;
+        HandleSearch();
     }
 }

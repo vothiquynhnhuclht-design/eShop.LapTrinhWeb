@@ -1,39 +1,68 @@
 @page "/login"
 
-<div class="container py-5">
+<div class="beauty-container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow border-0">
-                <div class="card-header bg-primary text-white text-center py-3">
-                    <h4 class="mb-0"><i class="bi bi-shield-lock me-2"></i> Admin Login</h4>
+        <div class="col-md-6 col-lg-5">
+            <div class="beauty-card p-4 p-md-5">
+                <!-- Header Logo & Title -->
+                <div class="text-center mb-4">
+                    <div class="beauty-logo mb-2">
+                        eShop<span class="logo-dot">•</span><span class="logo-tag">Cosmetics</span>
+                    </div>
+                    <span class="badge badge-beauty mb-2">Atelier Access</span>
+                    <h2 class="font-serif fs-3 mb-1">Welcome Back</h2>
+                    <p class="text-secondary small">
+                        Sign in with administrator credentials to manage shop orders and inventory.
+                    </p>
                 </div>
-                <div class="card-body p-4">
-                    @if (isError)
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Invalid username or password!
+
+                @if (isError)
+                {
+                    <div class="p-3 mb-4 rounded" style="background-color: var(--color-danger-bg); border: 1px solid rgba(192, 87, 87, 0.2); color: var(--color-danger);">
+                        <div class="d-flex align-items-center small">
+                            <i class="bi bi-exclamation-circle-fill me-2 fs-5"></i>
+                            <div>Invalid username or password. Please verify and try again.</div>
                         </div>
-                    }
-                    <form method="post" action="/authenticate">
-                        <AntiforgeryToken />
-                        <div class="mb-3">
-                            <label for="username" class="form-label fw-semibold">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required placeholder="admin" autofocus />
+                    </div>
+                }
+
+                <form method="post" action="/authenticate">
+                    <AntiforgeryToken />
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="position-relative">
+                            <i class="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                            <input type="text" class="beauty-input w-100 ps-5" id="username" name="username" required placeholder="admin" autofocus />
                         </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label fw-semibold">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required placeholder="••••••••" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="position-relative">
+                            <i class="bi bi-key position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                            <input type="password" class="beauty-input w-100 ps-5" id="password" name="password" required placeholder="••••••••" />
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Sign In</button>
-                    </form>
-                </div>
-                <div class="card-footer bg-light text-center text-muted small py-2">
+                    </div>
+
+                    <button type="submit" class="btn-beauty-primary btn-beauty-lg w-100 mb-3">
+                        <i class="bi bi-shield-lock me-2"></i> Sign In to Account
+                    </button>
+                </form>
+
+                <div class="text-center pt-3 border-top border-secondary border-opacity-10 text-muted extra-small">
                     Default credentials: <strong>admin</strong> / <strong>admin123</strong>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .extra-small {
+        font-size: 0.75rem;
+    }
+</style>
 
 @code {
     [SupplyParameterFromQuery]

@@ -6,24 +6,29 @@
 @inject IUpdateQuantityUseCase updateQuantityUseCase
 @inject IDeleteProductUseCase deleteProductUseCase
 
-<div class="container py-3">
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-        <h3 class="mb-0">Shopping Cart</h3>
-        <NavLink href="products" class="btn btn-outline-secondary btn-sm">
-            &larr; Continue Shopping
+<div class="beauty-container py-4">
+    <!-- Header Row -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 pb-2 border-bottom border-secondary border-opacity-10">
+        <div>
+            <span class="badge badge-beauty mb-2">My Shopping Bag</span>
+            <h1 class="font-serif fs-2 mb-0">Your Beauty Selection</h1>
+        </div>
+        <NavLink href="products" class="btn-beauty-outline btn-beauty-sm text-decoration-none align-self-start align-self-sm-auto">
+            <i class="bi bi-arrow-left me-1"></i> Continue Shopping
         </NavLink>
     </div>
 
     @if (order != null && order.LineItems != null && order.LineItems.Count > 0)
     {
         <div class="row g-4">
+            <!-- Left: Line Items List -->
             <div class="col-lg-8">
-                <div class="card shadow-sm border-0 p-3">
-                    <OrderLineItemsComponent LineItems="order.LineItems" 
-                                            OnDeleteProduct="HandleDeleteProduct" 
-                                            OnUpdateQuantity="HandleUpdateQuantity" />
-                </div>
+                <OrderLineItemsComponent LineItems="order.LineItems" 
+                                        OnDeleteProduct="HandleDeleteProduct" 
+                                        OnUpdateQuantity="HandleUpdateQuantity" />
             </div>
+
+            <!-- Right: Order Summary Sidebar -->
             <div class="col-lg-4">
                 <OrderSummaryComponent Order="order" />
             </div>
@@ -31,20 +36,34 @@
     }
     else
     {
-        <div class="card shadow-sm border-0 p-5 text-center my-4">
-            <div class="mb-3">
-                <i class="bi bi-cart-x fs-1 text-muted"></i>
+        <div class="beauty-card p-5 text-center my-5">
+            <div class="mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center" 
+                     style="width: 80px; height: 80px; background-color: var(--color-accent-light); border-radius: 50%;">
+                    <i class="bi bi-bag-x fs-1 text-accent"></i>
+                </div>
             </div>
-            <h4 class="text-secondary mb-3">Your shopping cart is empty</h4>
-            <p class="text-muted mb-4">Looks like you haven't added any products to your cart yet.</p>
+            <h3 class="font-serif mb-2">Your Shopping Bag is Empty</h3>
+            <p class="text-secondary max-w-400 mx-auto mb-4">
+                It looks like you haven't selected any formulas yet. Explore our curated catalog of beauty essentials.
+            </p>
             <div>
-                <NavLink href="products" class="btn btn-primary px-4 py-2">
-                    Browse Products
+                <NavLink href="products" class="btn-beauty-primary btn-beauty-lg text-decoration-none">
+                    <i class="bi bi-sparkles me-2"></i> Discover Products
                 </NavLink>
             </div>
         </div>
     }
 </div>
+
+<style>
+    .max-w-400 {
+        max-width: 420px;
+    }
+    .text-accent {
+        color: var(--color-accent);
+    }
+</style>
 
 @code {
     private Order? order;

@@ -2,21 +2,39 @@
 
 @if (Order != null)
 {
-    <div class="card shadow-sm border-0 bg-light p-3">
-        <div class="card-body">
-            <h5 class="card-title fw-bold border-bottom pb-2 mb-3">Order Summary</h5>
-            <div class="d-flex justify-content-between mb-2">
-                <span class="text-secondary">Total Items:</span>
-                <span class="fw-bold">@Order.TotalItems</span>
-            </div>
-            <div class="d-flex justify-content-between mb-3">
-                <span class="text-secondary">Total Price:</span>
-                <span class="fw-bold fs-4 text-danger">@Order.TotalPrice.ToString("c")</span>
-            </div>
-            <hr />
-            <NavLink href="checkout" class="btn btn-primary w-100 py-2 fw-bold">
-                Proceed to Checkout
-            </NavLink>
+    <div class="beauty-card p-4 sticky-top" style="top: 96px;">
+        <h4 class="font-serif fs-5 mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+            Order Summary
+        </h4>
+
+        <div class="d-flex justify-content-between text-secondary mb-2 small">
+            <span>Items Subtotal (@Order.TotalItems)</span>
+            <span class="fw-semibold text-dark">@Order.TotalPrice.ToString("c")</span>
+        </div>
+
+        <div class="d-flex justify-content-between text-secondary mb-2 small">
+            <span>Standard Delivery</span>
+            <span class="badge" style="background-color: var(--color-success-bg); color: var(--color-success); font-weight: 700;">FREE</span>
+        </div>
+
+        <div class="d-flex justify-content-between text-secondary mb-3 small">
+            <span>Estimated Taxes</span>
+            <span class="text-muted">Included</span>
+        </div>
+
+        <hr class="border-secondary opacity-15 my-3" />
+
+        <div class="d-flex justify-content-between align-items-baseline mb-4">
+            <span class="fw-bold fs-6">Estimated Total</span>
+            <span class="fw-bold fs-4 text-dark font-serif">@Order.TotalPrice.ToString("c")</span>
+        </div>
+
+        <NavLink href="checkout" class="btn-beauty-primary btn-beauty-lg w-100 mb-3 text-decoration-none">
+            <i class="bi bi-lock me-2"></i> Proceed to Checkout
+        </NavLink>
+
+        <div class="text-center text-muted small">
+            <i class="bi bi-shield-lock me-1"></i> Safe & Secure 256-Bit SSL Checkout
         </div>
     </div>
 }

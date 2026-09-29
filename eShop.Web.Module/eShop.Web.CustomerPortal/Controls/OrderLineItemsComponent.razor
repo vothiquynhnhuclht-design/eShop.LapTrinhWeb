@@ -4,75 +4,210 @@
 {
     bool isEditable = OnDeleteProduct.HasDelegate || OnUpdateQuantity.HasDelegate;
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col" style="@(isEditable ? "width: 40%;" : "width: 50%;")">Product</th>
-                    <th scope="col" class="text-center" style="@(isEditable ? "width: 15%;" : "width: 20%;")">Price</th>
-                    <th scope="col" class="text-center" style="@(isEditable ? "width: 20%;" : "width: 15%;")">Quantity</th>
-                    <th scope="col" class="text-end" style="@(isEditable ? "width: 15%;" : "width: 15%;")">Total</th>
-                    @if (isEditable)
+    <div class="beauty-cart-items-list">
+        @foreach (var item in LineItems)
+        {
+            <div class="beauty-cart-item">
+                <!-- Product Thumbnail Image -->
+                <div class="cart-item-img-container">
+                    @if (!string.IsNullOrEmpty(item.Product?.ImageLink))
                     {
-                        <th scope="col" class="text-center" style="width: 10%;">Action</th>
+                        <img src="@item.Product.ImageLink" alt="@item.Product.Name" class="cart-item-img" />
                     }
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in LineItems)
-                {
-                    <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                @if (!string.IsNullOrEmpty(item.Product?.ImageLink))
-                                {
-                                    <img src="@item.Product.ImageLink" alt="@item.Product.Name" class="img-thumbnail me-3" style="width: 50px; height: 50px; object-fit: contain;" />
-                                }
-                                <div>
-                                    <NavLink href="@($"/product/{item.ProductId}")" class="fw-bold text-decoration-none text-dark">
-                                        @(item.Product?.Name ?? $"Product #{item.ProductId}")
-                                    </NavLink>
-                                    @if (!string.IsNullOrEmpty(item.Product?.Brand))
-                                    {
-                                        <div class="text-muted small text-capitalize">@item.Product.Brand</div>
-                                    }
+                    else
+                    {
+                        <i class="bi bi-image text-muted fs-3"></i>
+                    }
+                </div>
+
+                <!-- Product Details -->
+                <div class="cart-item-details">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            @if (!string.IsNullOrEmpty(item.Product?.Brand))
+                            {
+                                <div class="text-uppercase text-muted fw-bold extra-small mb-1">
+                                    @item.Product.Brand
                                 </div>
+                            }
+                            <h5 class="cart-item-title mb-1">
+                                <NavLink href="@($"/product/{item.ProductId}")" class="text-decoration-none text-dark">
+                                    @(item.Product?.Name ?? $"Product #{item.ProductId}")
+                                </NavLink>
+                            </h5>
+                            <div class="text-secondary small">
+                                Unit Price: <strong class="text-dark">@item.Price.ToString("c")</strong>
                             </div>
-                        </td>
-                        <td class="text-center">@item.Price.ToString("c")</td>
-                        <td class="text-center">
-                            @if (isEditable)
-                            {
-                                <div class="d-inline-flex align-items-center justify-content-center">
-                                    <input type="number" min="1" class="form-control form-control-sm text-center" style="width: 75px;" 
-                                           value="@item.Quantity" 
-                                           @onchange="@(e => HandleQuantityChange(item, e))" />
-                                </div>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary fs-6">@item.Quantity</span>
-                            }
-                        </td>
-                        <td class="text-end fw-bold text-danger">@((item.Price * item.Quantity).ToString("c"))</td>
+                        </div>
+
+                        <!-- Subtotal for this item -->
+                        <div class="text-end">
+                            <div class="cart-item-subtotal">
+                                @((item.Price * item.Quantity).ToString("c"))
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Controls & Delete Action -->
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top border-secondary border-opacity-10">
                         @if (isEditable)
                         {
-                            <td class="text-center">
-                                <button class="btn btn-outline-danger btn-sm" @onclick="@(() => HandleDelete(item.ProductId))" title="Remove item">
-                                    <i class="bi bi-trash"></i> Delete
+                            <div class="cart-qty-selector">
+                                <button type="button" class="cart-qty-btn" @onclick="@(() => HandleDecreaseQuantity(item))" disabled="@(item.Quantity <= 1)">
+                                    <i class="bi bi-dash"></i>
                                 </button>
-                            </td>
+                                <span class="cart-qty-num">@item.Quantity</span>
+                                <button type="button" class="cart-qty-btn" @onclick="@(() => HandleIncreaseQuantity(item))">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+
+                            <button type="button" class="btn-remove-item" @onclick="@(() => HandleDelete(item.ProductId))" title="Remove from bag">
+                                <i class="bi bi-trash3 me-1"></i> Remove
+                            </button>
                         }
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        else
+                        {
+                            <div class="small text-secondary">
+                                Quantity: <span class="badge badge-brand">@item.Quantity</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 }
 else
 {
-    <p class="text-muted">No items found.</p>
+    <p class="text-muted p-3 mb-0">No items found in this order.</p>
 }
+
+<style>
+    .beauty-cart-items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .beauty-cart-item {
+        background: #FFFFFF;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: 1.25rem;
+        display: flex;
+        gap: 1.25rem;
+        transition: border-color var(--transition-fast);
+    }
+
+    .beauty-cart-item:hover {
+        border-color: #DDD4CE;
+    }
+
+    .cart-item-img-container {
+        width: 90px;
+        height: 90px;
+        background-color: var(--color-surface-subdued);
+        border-radius: var(--radius-sm);
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .cart-item-img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .cart-item-details {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .cart-item-title {
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        line-height: 1.35;
+    }
+
+    .cart-item-subtotal {
+        font-family: var(--font-body);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--color-primary);
+    }
+
+    .cart-qty-selector {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-pill);
+        background: #FFFFFF;
+        padding: 0.15rem;
+        height: 36px;
+    }
+
+    .cart-qty-btn {
+        background: none;
+        border: none;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: var(--color-primary);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .cart-qty-btn:hover:not(:disabled) {
+        background: var(--color-surface-subdued);
+        color: var(--color-accent);
+    }
+
+    .cart-qty-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .cart-qty-num {
+        min-width: 28px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .btn-remove-item {
+        background: none;
+        border: none;
+        color: var(--color-muted);
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        transition: color var(--transition-fast);
+        padding: 0.25rem 0.5rem;
+    }
+
+    .btn-remove-item:hover {
+        color: var(--color-danger);
+    }
+
+    .extra-small {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+    }
+</style>
 
 @code {
     [Parameter]
@@ -84,11 +219,17 @@ else
     [Parameter]
     public EventCallback<int> OnDeleteProduct { get; set; }
 
-    private async Task HandleQuantityChange(OrderLineItem item, ChangeEventArgs e)
+    private async Task HandleIncreaseQuantity(OrderLineItem item)
     {
-        if (int.TryParse(e.Value?.ToString(), out int qty) && qty > 0)
+        item.Quantity++;
+        await OnUpdateQuantity.InvokeAsync(item);
+    }
+
+    private async Task HandleDecreaseQuantity(OrderLineItem item)
+    {
+        if (item.Quantity > 1)
         {
-            item.Quantity = qty;
+            item.Quantity--;
             await OnUpdateQuantity.InvokeAsync(item);
         }
     }
