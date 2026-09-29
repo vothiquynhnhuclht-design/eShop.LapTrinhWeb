@@ -135,7 +135,7 @@ cd eShop.LapTrinhWeb
 ---
 
 ## 👥 Thông tin Tác giả
-- **Người thực hiện:** Võ Thị Quỳnh Như
+- **Người thực hiện:** Võ Quỳnh Như
 - **Email:** vothiquynhnhuclht@gmail.com
 - **GitHub:** [vothiquynhnhuclht-design](https://github.com/vothiquynhnhuclht-design)
 
