@@ -1,0 +1,31 @@
+@using eShop.Components.Layout
+@using Microsoft.AspNetCore.Components.Authorization
+
+<Router AdditionalAssemblies="new[] { 
+        typeof(eShop.Web.CustomerPortal.Pages.SearchProductComponent).Assembly,
+        typeof(eShop.Web.AdminPortal.OutstandingOrdersComponent).Assembly
+    }" AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView DefaultLayout="@typeof(MainLayout)" RouteData="@routeData">
+            <NotAuthorized>
+                <div class="container py-4">
+                    <div class="alert alert-danger shadow-sm border-0" role="alert">
+                        <h4 class="alert-heading"><i class="bi bi-shield-x me-2"></i> Access Denied</h4>
+                        <p>You must be authenticated as an administrator to access this area.</p>
+                        <hr />
+                        <p class="mb-0">
+                            Please <NavLink href="login" class="btn btn-danger btn-sm">Log in</NavLink> to continue.
+                        </p>
+                    </div>
+                </div>
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
