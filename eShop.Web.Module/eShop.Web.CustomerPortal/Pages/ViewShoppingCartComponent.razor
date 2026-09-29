@@ -1,0 +1,66 @@
+@page "/cart"
+@using eShop.CoreBusiness.Models
+@using eShop.UseCases.ShoppingCartScreen
+@using eShop.Web.CustomerPortal.Controls
+@inject IViewShoppingCartUseCase viewShoppingCartUseCase
+@inject IUpdateQuantityUseCase updateQuantityUseCase
+@inject IDeleteProductUseCase deleteProductUseCase
+
+<div class="container py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <h3 class="mb-0">Shopping Cart</h3>
+        <NavLink href="products" class="btn btn-outline-secondary btn-sm">
+            &larr; Continue Shopping
+        </NavLink>
+    </div>
+
+    @if (order != null && order.LineItems != null && order.LineItems.Count > 0)
+    {
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 p-3">
+                    <OrderLineItemsComponent LineItems="order.LineItems" 
+                                            OnDeleteProduct="HandleDeleteProduct" 
+                                            OnUpdateQuantity="HandleUpdateQuantity" />
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <OrderSummaryComponent Order="order" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 p-5 text-center my-4">
+            <div class="mb-3">
+                <i class="bi bi-cart-x fs-1 text-muted"></i>
+            </div>
+            <h4 class="text-secondary mb-3">Your shopping cart is empty</h4>
+            <p class="text-muted mb-4">Looks like you haven't added any products to your cart yet.</p>
+            <div>
+                <NavLink href="products" class="btn btn-primary px-4 py-2">
+                    Browse Products
+                </NavLink>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private Order? order;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = await viewShoppingCartUseCase.Execute();
+    }
+
+    private async Task HandleDeleteProduct(int productId)
+    {
+        order = await deleteProductUseCase.Execute(productId);
+    }
+
+    private async Task HandleUpdateQuantity(OrderLineItem item)
+    {
+        order = await updateQuantityUseCase.Execute(item.ProductId, item.Quantity);
+    }
+}

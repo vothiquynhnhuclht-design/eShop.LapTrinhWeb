@@ -1,0 +1,27 @@
+@using eShop.CoreBusiness.Models
+
+@if (Order != null)
+{
+    <div class="card shadow-sm border-0 bg-light p-3">
+        <div class="card-body">
+            <h5 class="card-title fw-bold border-bottom pb-2 mb-3">Order Summary</h5>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-secondary">Total Items:</span>
+                <span class="fw-bold">@Order.TotalItems</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+                <span class="text-secondary">Total Price:</span>
+                <span class="fw-bold fs-4 text-danger">@Order.TotalPrice.ToString("c")</span>
+            </div>
+            <hr />
+            <NavLink href="checkout" class="btn btn-primary w-100 py-2 fw-bold">
+                Proceed to Checkout
+            </NavLink>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Order? Order { get; set; }
+}

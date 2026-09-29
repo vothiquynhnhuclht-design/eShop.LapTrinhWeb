@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6D5A1B18-8397-4BA9-AED1-E47045F18768}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>eShop.UseCases</RootNamespace>
+    <AssemblyName>eShop.UseCases</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminPortal\OrderDetailScreen\IProcessOrderUseCase.cs" />
+    <Compile Include="AdminPortal\OrderDetailScreen\ProcessOrderUseCase.cs" />
+    <Compile Include="AdminPortal\OrderDetailScreen\IViewOrderDetailUseCase.cs" />
+    <Compile Include="AdminPortal\OrderDetailScreen\ViewOrderDetailUseCase.cs" />
+    <Compile Include="AdminPortal\OutstandingOrdersScreen\IViewOutstandingOrdersUseCase.cs" />
+    <Compile Include="AdminPortal\OutstandingOrdersScreen\ViewOutstandingOrdersUseCase.cs" />
+    <Compile Include="OrderConfirmationScreen\IPlaceOrderUseCase.cs" />
+    <Compile Include="OrderConfirmationScreen\PlaceOrderUseCase.cs" />
+    <Compile Include="OrderConfirmationScreen\IViewOrderConfirmationUseCase.cs" />
+    <Compile Include="OrderConfirmationScreen\ViewOrderConfirmationUseCase.cs" />
+    <Compile Include="PluginInterfaces\DataStore\ICustomerDataAccess.cs" />
+    <Compile Include="PluginInterfaces\DataStore\IOrderRepository.cs" />
+    <Compile Include="PluginInterfaces\DataStore\IProductRepository.cs" />
+    <Compile Include="PluginInterfaces\StateStore\IShoppingCartStateStore.cs" />
+    <Compile Include="PluginInterfaces\UI\IShoppingCart.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchProductScreen\ISearchProductUseCase.cs" />
+    <Compile Include="SearchProductScreen\SearchProductUseCase.cs" />
+    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="ShoppingCartScreen\IDeleteProductUseCase.cs" />
+    <Compile Include="ShoppingCartScreen\DeleteProductUseCase.cs" />
+    <Compile Include="ShoppingCartScreen\IUpdateQuantityUseCase.cs" />
+    <Compile Include="ShoppingCartScreen\UpdateQuantityUseCase.cs" />
+    <Compile Include="ShoppingCartScreen\IViewShoppingCartUseCase.cs" />
+    <Compile Include="ShoppingCartScreen\ViewShoppingCartUseCase.cs" />
+    <Compile Include="ViewProductScreen\AddProductToCartUseCase.cs" />
+    <Compile Include="ViewProductScreen\Interfaces\IAddProductToCartUseCase.cs" />
+    <Compile Include="ViewProductScreen\Interfaces\IViewProductUseCase.cs" />
+    <Compile Include="ViewProductScreen\ViewProductUseCase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\eShop.CoreBusiness\eShop.CoreBusiness.csproj">
+      <Project>{b634987a-25db-4141-8385-d73645cd8a30}</Project>
+      <Name>eShop.CoreBusiness</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

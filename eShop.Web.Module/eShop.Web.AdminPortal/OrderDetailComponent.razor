@@ -1,0 +1,99 @@
+@page "/orderdetail/{orderId:int}"
+@attribute [Authorize]
+@inject IViewOrderDetailUseCase viewOrderDetailUseCase
+@inject IProcessOrderUseCase processOrderUseCase
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider authenticationStateProvider
+
+<div class="container py-4">
+    <div class="mb-3">
+        <NavLink href="outstandingorders" class="btn btn-outline-secondary btn-sm">
+            &larr; Back to Outstanding Orders
+        </NavLink>
+    </div>
+
+    @if (order != null)
+    {
+        <div class="card shadow-sm border-0 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h3 class="mb-0">Order Details - #@order.OrderId</h3>
+                @if (order.DateProcessed.HasValue)
+                {
+                    <span class="badge bg-success fs-6">
+                        Processed on @order.DateProcessed.Value.ToString("dd/MM/yyyy HH:mm") by @order.AdminUser
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark fs-6">Pending Processing</span>
+                }
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded">
+                        <h6 class="fw-bold text-secondary mb-2">Order Information</h6>
+                        <div><strong>Order ID:</strong> #@order.OrderId</div>
+                        <div><strong>Reference ID:</strong> <span class="badge bg-dark font-monospace">@order.UniqueId</span></div>
+                        <div><strong>Date Placed:</strong> @order.DatePlaced?.ToString("dd/MM/yyyy HH:mm:ss")</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded">
+                        <h6 class="fw-bold text-secondary mb-2">Customer / Shipping Information</h6>
+                        <div><strong>Name:</strong> @order.CustomerName</div>
+                        <div><strong>Address:</strong> @order.CustomerAddress, @order.CustomerCity</div>
+                        <div><strong>State / Country:</strong> @order.CustomerStateProvince, @order.CustomerCountry</div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-3">Purchased Items</h5>
+            <OrderLineItemsComponent LineItems="order.LineItems" />
+
+            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                <span class="fs-5 fw-bold">Total Amount:</span>
+                <span class="fs-4 fw-bold text-danger">@order.TotalPrice.ToString("c")</span>
+            </div>
+
+            @if (!order.DateProcessed.HasValue)
+            {
+                <div class="mt-4 pt-2 text-end">
+                    <button class="btn btn-success btn-lg px-4" @onclick="HandleProcessOrder">
+                        <i class="bi bi-check2-circle me-2"></i> Mark as Processed
+                    </button>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            Order #@orderId could not be found.
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int orderId { get; set; }
+
+    private Order? order;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        order = viewOrderDetailUseCase.Execute(orderId);
+    }
+
+    private async Task HandleProcessOrder()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var adminUserName = authState.User.Identity?.Name ?? "Admin";
+
+        if (processOrderUseCase.Execute(orderId, adminUserName))
+        {
+            navigationManager.NavigateTo("/outstandingorders");
+        }
+    }
+}

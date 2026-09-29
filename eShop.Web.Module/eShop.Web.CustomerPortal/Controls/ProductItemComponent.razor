@@ -1,0 +1,29 @@
+@using eShop.CoreBusiness.Models
+
+@if (Product != null)
+{
+    <div class="col mb-4">
+        <div class="card h-100 shadow-sm" style="width: 16rem;">
+            <img src="@Product.ImageLink" class="card-img-top p-3" alt="@Product.Name" style="height: 180px; object-fit: contain;" />
+            <div class="card-body d-flex flex-column">
+                <h6 class="card-subtitle mb-2 text-muted text-capitalize">@Product.Brand</h6>
+                <h5 class="card-title fs-6 flex-grow-1">
+                    <NavLink href="@($"/product/{Product.Id}")" class="text-decoration-none text-dark">
+                        @Product.Name
+                    </NavLink>
+                </h5>
+                <div class="mt-3 d-flex justify-content-between align-items-center">
+                    <span class="text-danger fw-bold fs-5">@Product.Price.ToString("c")</span>
+                    <NavLink href="@($"/product/{Product.Id}")" class="btn btn-primary btn-sm">
+                        View Details
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Product? Product { get; set; }
+}

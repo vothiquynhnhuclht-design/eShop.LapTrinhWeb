@@ -1,0 +1,73 @@
+@page "/product/{id:int}"
+@using eShop.CoreBusiness.Models
+@inject IViewProductUseCase viewProductUseCase
+@inject IAddProductToCartUseCase addProductToCartUseCase
+@inject NavigationManager navigationManager
+
+<div class="container py-3">
+    <div class="mb-3">
+        <NavLink href="products" class="btn btn-outline-secondary btn-sm">
+            &larr; Back to Products
+        </NavLink>
+    </div>
+
+    @if (product != null)
+    {
+        <div class="card shadow-sm border-0">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-5 text-center p-4 bg-light rounded-start">
+                    <img src="@product.ImageLink" class="img-fluid rounded" alt="@product.Name" style="max-height: 350px; object-fit: contain;" />
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body p-4">
+                        <span class="badge bg-secondary mb-2 text-uppercase">@product.Brand</span>
+                        <h2 class="card-title mb-3">@product.Name</h2>
+                        
+                        <div class="mb-3">
+                            <span class="text-danger fw-bold fs-3">@product.Price.ToString("c")</span>
+                        </div>
+                        
+                        <hr />
+                        
+                        <h6 class="text-muted fw-bold">Description:</h6>
+                        <p class="card-text text-secondary lh-base">@product.Description</p>
+                        
+                        <div class="mt-4 pt-2">
+                            <button class="btn btn-primary btn-lg px-4" @onclick="AddToCart">
+                                <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            Product not found.
+        </div>
+    }
+</div>
+
+@code {
+    private Product? product;
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        product = viewProductUseCase.Execute(id);
+    }
+
+    private void AddToCart()
+    {
+        if (product != null)
+        {
+            addProductToCartUseCase.Execute(product.Id);
+            navigationManager.NavigateTo("/cart");
+        }
+    }
+}

@@ -1,0 +1,47 @@
+@page "/product"
+@page "/products"
+@page "/search"
+@using eShop.CoreBusiness.Models
+@using eShop.UseCases.SearchProductScreen
+@inject ISearchProductUseCase searchProductUseCase
+
+<div class="container-fluid py-2">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <h3 class="mb-0">Product Catalog</h3>
+    </div>
+
+    <div class="mb-4">
+        <SearchBarComponent OnSearch="HandleSearch"></SearchBarComponent>
+    </div>
+
+    @if (products != null && products.Any())
+    {
+        <div class="d-flex flex-wrap gap-3">
+            @foreach (var prod in products)
+            {
+                <ProductItemComponent Product="prod"></ProductItemComponent>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            No products found matching your search.
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<Product>? products;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        products = searchProductUseCase.Execute();
+    }
+
+    private void HandleSearch(string filter)
+    {
+        products = searchProductUseCase.Execute(filter);
+    }
+}

@@ -1,0 +1,39 @@
+## Visual Studio / .NET .gitignore
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa]rchive/
+[Bb]uild/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.userprefs
+
+# SQL Server local / temp files
+*.mdf
+*.ldf
+*.ndf
+
+# Rider / VS Code / OS
+.idea/
+.vscode/
+*.DotSettings.user
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
